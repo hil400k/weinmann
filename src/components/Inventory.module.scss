@@ -1,0 +1,15 @@
+@import "../utils";
+
+.inventory {
+  border: 2px solid $border-color;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.notification {
+  padding: 8px;
+}
+
+:global(.btn) {
+  margin-left: 20px;
+}

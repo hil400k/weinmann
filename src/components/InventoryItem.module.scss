@@ -1,0 +1,15 @@
+@import "../utils";
+
+.inventory-item {
+  border-bottom: 2px solid $border-color;
+  padding: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(0, 191, 255, 0.18);
+  }
+
+  &.selected {
+    background: rgba(0, 191, 255, 0.57);
+  }
+}

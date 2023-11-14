@@ -3,14 +3,12 @@ import React, { ReactNode } from 'react';
 import styles from './Modal.module.scss';
 import { createPortal } from 'react-dom';
 
+import CloseIcon from '../../assets/close-square-svgrepo-com.svg';
+
 type Props = {
   children: ReactNode;
   confirmed: () => void;
 };
-
-type ModalOverlayProps = {
-  children: ReactNode;
-}
 
 type BackdropProps = {
   confirmed: () => void;
@@ -22,9 +20,14 @@ const Backdrop = (props: BackdropProps) => {
   )
 };
 
-const ModalOverlay: React.FC<ModalOverlayProps> = (props: ModalOverlayProps) => {
+const ModalOverlay: React.FC<Props> = (props: Props) => {
   return (
     <div className={styles['modal']}>
+      <div className={styles['header-row']}>
+        <span>
+          <img onClick={() => props.confirmed()} src={CloseIcon} alt="close" />
+        </span>
+      </div>
       {props.children}
     </div>
   );
@@ -34,7 +37,7 @@ const Modal: React.FC<Props> = (props: Props) => {
   return (
     <>
       {createPortal(<Backdrop confirmed={props.confirmed} />, document.getElementById('backdrop-root') as Element)}
-      {createPortal(<ModalOverlay>
+      {createPortal(<ModalOverlay confirmed={props.confirmed} >
         {props.children}
       </ModalOverlay>, document.getElementById('overlay-root') as Element)}
     </>

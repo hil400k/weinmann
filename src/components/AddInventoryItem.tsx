@@ -1,21 +1,31 @@
 import React, { SyntheticEvent, useRef } from 'react';
 
 import styles from './AddInventoryItem.module.scss';
-import { useMutation } from '@tanstack/react-query';
+import { queryClient } from '../store.ts';
 
 type Props = {
   confirmed: () => void;
 };
 const AddInventoryItem: React.FC<Props> = (props: Props) => {
-  const ref = useRef();
+  const ref = useRef<HTMLInputElement>(null);
 
-  const { context, data } = useMutation({
-    mutationKey: ['products']
-  });
   const submitted = (e: SyntheticEvent) => {
     e.preventDefault();
 
-    props.confirmed();
+    const val = ref?.current?.value;
+
+    if (val) {
+      queryClient.setQueriesData({
+        queryKey: ['products']
+      }, (prev) => {
+
+        return [
+          { id: new Date().getTime().toString(),
+            title: val
+          }, ...(prev as any[])]
+      });
+      props.confirmed();
+    }
   }
 
   return (

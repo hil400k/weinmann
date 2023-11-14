@@ -3,18 +3,20 @@ import { fetchProducts } from '../utils/fetchProducts.ts';
 
 import styles from './Inventory.module.scss';
 import InventoryItem from './InventoryItem.tsx';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Modal from './ui/Modal.tsx';
 import AddInventoryItem from './AddInventoryItem.tsx';
-import { AppContext } from '../store.ts';
+import { queryClient } from '../store.ts';
+// import { AppContext } from '../store.ts';
 
 const Inventory = () => {
   let content;
   const { data, isPending, isError, error } = useQuery({
     queryKey: ['products'],
     queryFn: () => fetchProducts(),
+    refetchOnWindowFocus: false
   });
-  const appCtx = useContext(AppContext);
+  // const appCtx = useContext(AppContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -24,6 +26,23 @@ const Inventory = () => {
 
   const changeModalState = () => {
     setModalOpen(prevState => !prevState);
+  }
+
+  const addToBasket = () => {
+    queryClient.setQueriesData({
+      queryKey: ['basket'],
+    }, (prev) => {
+      const item = data.find(i => i.id === selected);
+      return [item, ...(prev as any[])];
+    });
+
+    queryClient.setQueriesData({
+      queryKey: ['products']
+    }, (prev) => {
+      const newList = prev.filter(i => i.id !== selected);
+
+      return newList;
+    })
   }
 
   if (isError) {
@@ -61,7 +80,7 @@ const Inventory = () => {
         </Modal>}
         <div className={styles['buttons']}>
           <button onClick={() => setModalOpen(true)} className='btn'>New</button>
-          <button className='btn'>Add</button>
+          <button onClick={() => addToBasket()} className='btn'>Add</button>
         </div>
       </div>
       {content}

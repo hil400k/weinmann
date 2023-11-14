@@ -12,8 +12,17 @@
   left: 50%;
   margin-top: 100px;
   min-width: 80%;
-  padding: 20px;
+  padding: 20px 20px 0px 20px;
   border-radius: 4px;
   transform: translateX(-50%);
   background: #fff;
+}
+
+.header-row {
+  display: flex;
+  justify-content: flex-end;
+
+  img {
+    cursor: pointer;
+  }
 }

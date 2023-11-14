@@ -3,18 +3,27 @@ import { fetchProducts } from '../utils/fetchProducts.ts';
 
 import styles from './Inventory.module.scss';
 import InventoryItem from './InventoryItem.tsx';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import Modal from './ui/Modal.tsx';
+import AddInventoryItem from './AddInventoryItem.tsx';
+import { AppContext } from '../store.ts';
 
 const Inventory = () => {
   let content;
   const { data, isPending, isError, error } = useQuery({
     queryKey: ['products'],
-    queryFn: () => fetchProducts()
+    queryFn: () => fetchProducts(),
   });
+  const appCtx = useContext(AppContext);
+  const [modalOpen, setModalOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
 
   const clicked = (id: string) => {
     setSelected(id);
+  }
+
+  const changeModalState = () => {
+    setModalOpen(prevState => !prevState);
   }
 
   if (isError) {
@@ -47,8 +56,11 @@ const Inventory = () => {
     <div className={styles['inventory']}>
       <div className="control-pane">
         <h4>Inventory</h4>
+        {modalOpen && <Modal confirmed={changeModalState}>
+          <AddInventoryItem confirmed={changeModalState} />
+        </Modal>}
         <div className={styles['buttons']}>
-          <button className='btn'>New</button>
+          <button onClick={() => setModalOpen(true)} className='btn'>New</button>
           <button className='btn'>Add</button>
         </div>
       </div>

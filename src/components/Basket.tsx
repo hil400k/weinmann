@@ -4,7 +4,7 @@ const Basket = () => {
   return (
     <div className={styles['basket']}>
       <div className="control-pane">
-        <h4>Inventory</h4>
+        <h4>Basket</h4>
         <div className={styles['buttons']}>
           <button className='btn'>Remove</button>
         </div>

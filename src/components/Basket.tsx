@@ -19,7 +19,26 @@ const Basket = () => {
   }
 
   const removed = () => {
+    if (!selected) {
+      return;
+    }
 
+    queryClient.setQueriesData({
+      queryKey: ['products'],
+    }, (prev) => {
+      const item = data.find(i => i.id === selected);
+      return [item, ...(prev as any[])];
+    });
+
+    queryClient.setQueriesData({
+      queryKey: ['basket']
+    }, (prev) => {
+      const newList = prev.filter(i => i.id !== selected);
+
+      return newList || [];
+    });
+
+    setSelected(null);
   };
 
   if (isError) {

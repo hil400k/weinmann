@@ -29,7 +29,7 @@ function App() {
         </div>
         <div className={styles['total-section']}>
           <span>
-            Total: { isSuccess ? data.length : 0 }
+            Inventory (only) Total: { isSuccess ? data.length : 0 }
           </span>
         </div>
       </div>

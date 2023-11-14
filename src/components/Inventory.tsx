@@ -29,6 +29,10 @@ const Inventory = () => {
   }
 
   const addToBasket = () => {
+    if (!selected) {
+      return;
+    }
+
     queryClient.setQueriesData({
       queryKey: ['basket'],
     }, (prev) => {
@@ -41,8 +45,10 @@ const Inventory = () => {
     }, (prev) => {
       const newList = prev.filter(i => i.id !== selected);
 
-      return newList;
-    })
+      return newList || [];
+    });
+
+    setSelected(null);
   }
 
   if (isError) {

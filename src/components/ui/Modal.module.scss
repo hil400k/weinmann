@@ -1,5 +1,7 @@
+@import "../../utils";
+
 .backdrop {
-  background: rgba(0, 0, 0, 0.5);
+  background: $backdrop-color;
   position: fixed;
   top: 0;
   left: 0;
@@ -15,7 +17,7 @@
   padding: 20px 20px 0px 20px;
   border-radius: 4px;
   transform: translateX(-50%);
-  background: #fff;
+  background: $white-color;
 }
 
 .header-row {

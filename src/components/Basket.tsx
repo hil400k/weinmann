@@ -1,6 +1,5 @@
 import styles from './Basket.module.scss';
 import { useQuery } from '@tanstack/react-query';
-import { queryClient } from '../store.ts';
 import InventoryItem from './InventoryItem.tsx';
 import { useState } from 'react';
 import { changeInventoryItemLocation } from '../utils/changeInventoryItemLocation.ts';

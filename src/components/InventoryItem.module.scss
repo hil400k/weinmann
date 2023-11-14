@@ -6,10 +6,10 @@
   cursor: pointer;
 
   &:hover {
-    background: rgba(0, 191, 255, 0.18);
+    background: $hover-inventory-item-color;
   }
 
   &.selected {
-    background: rgba(0, 191, 255, 0.57);
+    background: $selected-inventory-item-color;
   }
 }

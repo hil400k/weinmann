@@ -1,7 +1,6 @@
 import styles from './App.module.scss';
 import Inventory from './components/Inventory.tsx';
 import Basket from './components/Basket.tsx';
-// import { queryClient } from './store.ts';
 import { useQuery } from '@tanstack/react-query';
 import { queryClient } from './store.ts';
 

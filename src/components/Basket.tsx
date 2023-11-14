@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { queryClient } from '../store.ts';
 import InventoryItem from './InventoryItem.tsx';
 import { useState } from 'react';
+import { changeInventoryItemLocation } from '../utils/changeInventoryItemLocation.ts';
 
 const Basket = () => {
   let content;
@@ -14,31 +15,17 @@ const Basket = () => {
     refetchOnWindowFocus: false
   });
   const [selected, setSelected] = useState<string | null>(null);
-  const clicked = (id: string) => {
-    setSelected(id);
-  }
+  const clicked = (id: string) => setSelected(id);
+  const resetSelected = () => setSelected(null);
 
   const removed = () => {
-    if (!selected) {
-      return;
-    }
-
-    queryClient.setQueriesData({
-      queryKey: ['products'],
-    }, (prev) => {
-      const item = data.find(i => i.id === selected);
-      return [item, ...(prev as any[])];
-    });
-
-    queryClient.setQueriesData({
-      queryKey: ['basket']
-    }, (prev) => {
-      const newList = prev.filter(i => i.id !== selected);
-
-      return newList || [];
-    });
-
-    setSelected(null);
+    changeInventoryItemLocation(
+      'basket',
+      'products',
+      selected,
+      data,
+      resetSelected
+    );
   };
 
   if (isError) {

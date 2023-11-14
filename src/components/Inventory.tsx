@@ -6,7 +6,7 @@ import InventoryItem from './InventoryItem.tsx';
 import { useState } from 'react';
 import Modal from './ui/Modal.tsx';
 import AddInventoryItem from './AddInventoryItem.tsx';
-import { queryClient } from '../store.ts';
+import { changeInventoryItemLocation } from '../utils/changeInventoryItemLocation.ts';
 // import { AppContext } from '../store.ts';
 
 const Inventory = () => {
@@ -28,27 +28,16 @@ const Inventory = () => {
     setModalOpen(prevState => !prevState);
   }
 
+  const resetSelected = () => setSelected(null);
+
   const addToBasket = () => {
-    if (!selected) {
-      return;
-    }
-
-    queryClient.setQueriesData({
-      queryKey: ['basket'],
-    }, (prev) => {
-      const item = data.find(i => i.id === selected);
-      return [item, ...(prev as any[])];
-    });
-
-    queryClient.setQueriesData({
-      queryKey: ['products']
-    }, (prev) => {
-      const newList = prev.filter(i => i.id !== selected);
-
-      return newList || [];
-    });
-
-    setSelected(null);
+    changeInventoryItemLocation(
+      'products',
+      'basket',
+      selected,
+      data,
+      resetSelected
+    );
   }
 
   if (isError) {

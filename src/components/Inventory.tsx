@@ -87,7 +87,7 @@ const Inventory = () => {
     <div className={styles['inventory']}>
       <div className="control-pane">
         <h4>Inventory</h4>
-        {modalOpen && <Modal confirmed={changeModalState}>
+        {modalOpen && <Modal title="Add Inventory Item" confirmed={changeModalState}>
           <AddInventoryItem confirmed={changeModalState} />
         </Modal>}
         <div className={styles['buttons']}>

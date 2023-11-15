@@ -40,7 +40,7 @@ const AddInventoryItem: React.FC<Props> = (props: Props) => {
 
   return (
     <div className={styles['container']}>
-      <h4 className={styles['title']}>Add Inventory Item</h4>
+      <p className={styles['caption']}>Please, type the title...</p>
 
       <form onSubmit={submitted} className={styles['controls']}>
         <input ref={ref} type="text" />

@@ -26,6 +26,10 @@ function App() {
         lists: state
       }}>
       <div className={styles['container']}>
+        <h1 className={styles['title']}>
+          <span className={styles['back-text']}>Weinmann Inventory</span>
+          <span className={styles['frontal-text']}>Weinmann Inventory</span>
+        </h1>
         <div className={styles['sections-wrap']}>
           <div className={styles['inventory']}>
             <Inventory />

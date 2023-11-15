@@ -7,6 +7,7 @@ import CloseIcon from '../../assets/close-square-svgrepo-com.svg';
 
 type Props = {
   children: ReactNode;
+  title?: string;
   confirmed: () => void;
 };
 
@@ -24,6 +25,7 @@ const ModalOverlay: React.FC<Props> = (props: Props) => {
   return (
     <div className={styles['modal']}>
       <div className={styles['header-row']}>
+        <span className={styles['title']}>{props.title}</span>
         <span>
           <img onClick={() => props.confirmed()} src={CloseIcon} alt="close" />
         </span>
@@ -37,7 +39,7 @@ const Modal: React.FC<Props> = (props: Props) => {
   return (
     <>
       {createPortal(<Backdrop confirmed={props.confirmed} />, document.getElementById('backdrop-root') as Element)}
-      {createPortal(<ModalOverlay confirmed={props.confirmed} >
+      {createPortal(<ModalOverlay confirmed={props.confirmed} title={props.title}>
         {props.children}
       </ModalOverlay>, document.getElementById('overlay-root') as Element)}
     </>

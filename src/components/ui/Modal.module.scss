@@ -7,9 +7,11 @@
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 1000;
 }
 
 .modal {
+  z-index: 1000;
   position: fixed;
   left: 50%;
   margin-top: 100px;
@@ -22,7 +24,12 @@
 
 .header-row {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+
+  .title {
+    color: $black-color;
+    font-weight: 700;
+  }
 
   img {
     cursor: pointer;

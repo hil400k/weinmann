@@ -4,7 +4,7 @@
   padding: 20px 0;
 }
 
-.title {
+.caption {
   color: $black-color;
 }
 
@@ -13,6 +13,13 @@
   justify-content: stretch;
 
   input {
+    border-radius: 4px;
     width: 100%;
+    border: none;
+    padding: 4px 10px;
+
+    &:active, &:focus {
+      outline: none;
+    }
   }
 }

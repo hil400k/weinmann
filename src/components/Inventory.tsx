@@ -33,7 +33,6 @@ function addToBasket(ctx: TAppContext, selected: string[]) {
 }
 
 const Inventory = () => {
-  let content;
   const [pending, setPending] = useState(true);
   const appCtx = useContext(AppContext);
 
@@ -63,26 +62,6 @@ const Inventory = () => {
     setModalOpen(prevState => !prevState);
   }
 
-  if (pending) {
-    content = (
-      <div className={styles['notification']}>Please, wait...</div>
-    );
-  }
-
-  if (appCtx.lists.inventoryItems.length) {
-    content = appCtx.lists.inventoryItems.map((p) => {
-      return (
-        <InventoryItem
-          key={p.id}
-          id={p.id}
-          title={p.title}
-          clicked={clicked}
-          selected={selected.includes(p.id)}
-        />
-      );
-    });
-  }
-
   return (
     <div className={styles['inventory']}>
       <div className="control-pane">
@@ -92,10 +71,21 @@ const Inventory = () => {
         </Modal>}
         <div className={styles['buttons']}>
           <button onClick={() => setModalOpen(true)} className='btn'>New</button>
-          <button onClick={() => addToBasket(appCtx, selected)} className='btn'>Add</button>
+          <button onClick={() => addToBasket(appCtx, selected)} className='btn'>Add to Basket</button>
         </div>
       </div>
-      { content }
+      { pending && <div className={styles['notification']}>Please, wait...</div> }
+      { appCtx.lists.inventoryItems.map((p) => {
+        return (
+          <InventoryItem
+            key={p.id}
+            id={p.id}
+            title={p.title}
+            clicked={clicked}
+            selected={selected.includes(p.id)}
+          />
+        );
+      }) }
     </div>
   );
 }

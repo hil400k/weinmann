@@ -2,16 +2,17 @@ import styles from './Weinmann.module.scss';
 import Inventory from './Inventory.tsx';
 import Basket from './Basket.tsx';
 import { TInventoryItem } from '../models.ts';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { AppContext } from '../store.ts';
 
 const Weinmann = () => {
-  const appCtx = useContext(AppContext);
-  const getTotal = (): number => {
-    return (appCtx.lists.basketItems as Required<TInventoryItem>[]).reduce((sum, currItem) => {
+  const { lists } = useContext(AppContext);
+
+  const total = useMemo((): number => {
+    return (lists.basketItems as Required<TInventoryItem>[]).reduce((sum, currItem) => {
       return sum + currItem.count;
     }, 0);
-  }
+  }, [lists.basketItems]);
 
   return (
     <div className={styles['container']}>
@@ -29,7 +30,7 @@ const Weinmann = () => {
       </div>
       <div className={styles['total-section']}>
           <span>
-            Basket Total: { getTotal() }
+            Basket Total: { total }
           </span>
       </div>
     </div>

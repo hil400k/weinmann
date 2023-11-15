@@ -1,12 +1,12 @@
 import React, { ReactNode, useState } from 'react';
-import { defaultState, AppContext } from '../store.ts';
+import { defaultLists, AppContext } from '../store.ts';
 import { TLists } from '../models.ts';
 
 type Props = {
   children: ReactNode;
 }
 const AppContextProvider: React.FC<Props> = (props: Props) => {
-  const [state, setState] = useState(defaultState);
+  const [state, setState] = useState(defaultLists);
 
   const updateLists = (updated: TLists): void => {
     setState(updated);

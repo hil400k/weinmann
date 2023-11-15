@@ -8,21 +8,23 @@ import AddInventoryItem from './AddInventoryItem.tsx';
 import { AppContext } from '../store.ts';
 import { TAppContext, TInventoryItem } from '../models.ts';
 
-function addToBasket(ctx: TAppContext, selected: string | null) {
-  let updatedList = [];
+function addToBasket(ctx: TAppContext, selected: string[]) {
   const basketItems = ctx.lists.basketItems;
-  const existedIndex = ctx.lists.basketItems.findIndex(i => i.id === selected);
+  let updatedList = [...basketItems];
 
-  if (existedIndex !== -1) {
-    (basketItems[existedIndex] as Required<TInventoryItem>).count ++;
-    updatedList = [...basketItems];
-  } else {
+  selected.forEach(s => {
+    const existedIndex = updatedList.findIndex(i => i.id === s);
 
-    updatedList = [{
-      ...ctx.lists.inventoryItems.find(i => i.id === selected),
-      count: 1
-    }, ...basketItems];
-  }
+    if (existedIndex !== -1) {
+      (updatedList[existedIndex] as Required<TInventoryItem>).count ++;
+    } else {
+      const fromInventory = ctx.lists.inventoryItems.find(i => i.id === s);
+      updatedList = [{
+        ...(fromInventory as TInventoryItem),
+        count: 1
+      }, ...updatedList];
+    }
+  });
 
   ctx.updateLists({
     ...ctx.lists,
@@ -49,10 +51,12 @@ const Inventory = () => {
   }, []);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string[]>([]);
 
   const clicked = (id: string) => {
-    setSelected(id);
+    const index = selected.findIndex(i => i === id);
+
+    setSelected((index === -1) ? [id, ...selected] : selected.filter(i => i !== id));
   }
 
   const changeModalState = () => {
@@ -73,7 +77,7 @@ const Inventory = () => {
           id={p.id}
           title={p.title}
           clicked={clicked}
-          selected={p.id === selected}
+          selected={selected.includes(p.id)}
         />
       );
     });

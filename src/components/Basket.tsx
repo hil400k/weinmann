@@ -9,8 +9,9 @@ const Basket = () => {
   const [selected, setSelected] = useState<string[]>([]);
   const clicked = (id: string) => {
     const index = selected.findIndex(i => i === id);
+    const notPresent = index === -1;
 
-    setSelected((index === -1) ? [id, ...selected] : selected.filter(i => i !== id));
+    setSelected(notPresent ? [id, ...selected] : selected.filter(i => i !== id));
   }
 
   const removed = () => {

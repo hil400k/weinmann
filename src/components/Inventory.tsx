@@ -6,12 +6,35 @@ import { useContext, useEffect, useState } from 'react';
 import Modal from './ui/Modal.tsx';
 import AddInventoryItem from './AddInventoryItem.tsx';
 import { AppContext } from '../store.ts';
-import { TInventoryItem } from '../models.ts';
+import { TAppContext, TInventoryItem } from '../models.ts';
+
+function addToBasket(ctx: TAppContext, selected: string | null) {
+  let updatedList = [];
+  const basketItems = ctx.lists.basketItems;
+  const existedIndex = ctx.lists.basketItems.findIndex(i => i.id === selected);
+
+  if (existedIndex !== -1) {
+    (basketItems[existedIndex] as Required<TInventoryItem>).count ++;
+    updatedList = [...basketItems];
+  } else {
+
+    updatedList = [{
+      ...ctx.lists.inventoryItems.find(i => i.id === selected),
+      count: 1
+    }, ...basketItems];
+  }
+
+  ctx.updateLists({
+    ...ctx.lists,
+    basketItems: updatedList
+  });
+}
 
 const Inventory = () => {
   let content;
   const [pending, setPending] = useState(true);
   const appCtx = useContext(AppContext);
+
   useEffect(() => {
     const doRequest = async () => {
       const inventory = await fetchProducts();
@@ -34,28 +57,6 @@ const Inventory = () => {
 
   const changeModalState = () => {
     setModalOpen(prevState => !prevState);
-  }
-
-  const addToBasket = () => {
-    let updatedList = [];
-    const basketItems = appCtx.lists.basketItems;
-    const existedIndex = appCtx.lists.basketItems.findIndex(i => i.id === selected);
-
-    if (existedIndex !== -1) {
-      (basketItems[existedIndex] as Required<TInventoryItem>).count ++;
-      updatedList = [...basketItems];
-    } else {
-
-      updatedList = [{
-        ...appCtx.lists.inventoryItems.find(i => i.id === selected),
-        count: 1
-      }, ...basketItems];
-    }
-
-    appCtx.updateLists({
-      ...appCtx.lists,
-      basketItems: updatedList
-    });
   }
 
   if (pending) {
@@ -87,7 +88,7 @@ const Inventory = () => {
         </Modal>}
         <div className={styles['buttons']}>
           <button onClick={() => setModalOpen(true)} className='btn'>New</button>
-          <button onClick={() => addToBasket()} className='btn'>Add</button>
+          <button onClick={() => addToBasket(appCtx, selected)} className='btn'>Add</button>
         </div>
       </div>
       { content }

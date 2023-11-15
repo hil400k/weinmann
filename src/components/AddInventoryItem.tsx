@@ -2,10 +2,26 @@ import React, { SyntheticEvent, useContext, useRef } from 'react';
 
 import styles from './AddInventoryItem.module.scss';
 import { AppContext } from '../store.ts';
+import { TAppContext } from '../models.ts';
 
 type Props = {
   confirmed: () => void;
 };
+
+function addNewInventory(ctx: TAppContext, val: string) {
+  const updatedList = [
+    { id: new Date().getTime().toString(),
+      title: val
+    },
+    ...ctx.lists.inventoryItems
+  ];
+
+  ctx.updateLists({
+    ...ctx.lists,
+    inventoryItems: updatedList
+  });
+}
+
 const AddInventoryItem: React.FC<Props> = (props: Props) => {
   const appCtx = useContext(AppContext);
   const ref = useRef<HTMLInputElement>(null);
@@ -16,17 +32,7 @@ const AddInventoryItem: React.FC<Props> = (props: Props) => {
     const val = ref?.current?.value;
 
     if (val) {
-      const updatedList = [
-        { id: new Date().getTime().toString(),
-          title: val
-        },
-        ...appCtx.lists.inventoryItems
-      ];
-
-      appCtx.updateLists({
-        ...appCtx.lists,
-        inventoryItems: updatedList
-      });
+      addNewInventory(appCtx, val);
 
       props.confirmed();
     }

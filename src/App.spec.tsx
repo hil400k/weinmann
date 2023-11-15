@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import App from './App.tsx';
 
 describe('App component testing', () => {
@@ -7,9 +7,11 @@ describe('App component testing', () => {
     expect(true).toBe(true);
   })
 
-  test('', () => {
+  test('Basket Total Caption should be in document', () => {
     render(<App />);
 
-    expect(true).toBeTruthy()
+    const totalCaption = screen.getByText(/Basket Total: 0/);
+
+    expect(totalCaption).toBeInTheDocument();
   });
 });

@@ -1,10 +1,7 @@
-import styles from './App.module.scss';
-import Inventory from './components/Inventory.tsx';
-// import Basket from './components/Basket.tsx';
 import { defaultState, AppContext } from './store.ts';
 import { useState } from 'react';
-import Basket from './components/Basket.tsx';
-import { TInventoryItem, TLists } from './models.ts';
+import { TLists } from './models.ts';
+import Weinmann from './components/Weinmann.tsx';
 
 function App() {
   const [state, setState] = useState(defaultState);
@@ -13,39 +10,13 @@ function App() {
     setState(updated);
   };
 
-  const getTotal = (): number => {
-    return (state.basketItems as Required<TInventoryItem>[]).reduce((sum, currItem) => {
-      return sum + currItem.count;
-    }, 0);
-  }
-
   return (
-    <>
       <AppContext.Provider value={{
         updateLists: updateLists,
         lists: state
       }}>
-      <div className={styles['container']}>
-        <h1 className={styles['title']}>
-          <span className={styles['back-text']}>Weinmann Inventory</span>
-          <span className={styles['frontal-text']}>Weinmann Inventory</span>
-        </h1>
-        <div className={styles['sections-wrap']}>
-          <div className={styles['inventory']}>
-            <Inventory />
-          </div>
-          <div className={styles['basket']}>
-            <Basket />
-          </div>
-        </div>
-        <div className={styles['total-section']}>
-          <span>
-            Basket Total: { getTotal() }
-          </span>
-        </div>
-      </div>
+        <Weinmann />
       </AppContext.Provider>
-    </>
   )
 }
 

@@ -1,22 +1,30 @@
 import styles from './App.module.scss';
 import Inventory from './components/Inventory.tsx';
+// import Basket from './components/Basket.tsx';
+import { defaultState, AppContext } from './store.ts';
+import { useState } from 'react';
 import Basket from './components/Basket.tsx';
-import { useQuery } from '@tanstack/react-query';
-import { queryClient } from './store.ts';
+import { TInventoryItem } from './models.ts';
 
 function App() {
-  const { data, isSuccess } = useQuery({
-    queryKey: ['products'],
-    queryFn: () => {
-      return queryClient.getQueriesData({
-        queryKey: ['products']
-      })
-    },
-    refetchOnWindowFocus: false
-  });
+  const [state, setState] = useState(defaultState);
+
+  const updateLists = (updated: any) => {
+    setState(updated);
+  };
+
+  const getTotal = () => {
+    return state.basketItems.reduce((sum, currItem: Required<TInventoryItem>) => {
+      return sum + currItem.count;
+    }, 0);
+  }
 
   return (
     <>
+      <AppContext.Provider value={{
+        updateLists: updateLists,
+        lists: state
+      }}>
       <div className={styles['container']}>
         <div className={styles['sections-wrap']}>
           <div className={styles['inventory']}>
@@ -28,12 +36,17 @@ function App() {
         </div>
         <div className={styles['total-section']}>
           <span>
-            Inventory (only) Total: { isSuccess ? data.length : 0 }
+            Basket Total: { getTotal() }
           </span>
         </div>
       </div>
+      </AppContext.Provider>
     </>
   )
 }
 
 export default App
+
+// як працювати з тестами, що використовують реакт квері
+// використовується реакт квері для отримання даних, далі вони опрацьовуються на фронті без запиту
+// без оновлення на бекенді до потрібного часу. Де зберігати ті дані і як їх оновлювати

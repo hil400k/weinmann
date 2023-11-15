@@ -1,4 +1,6 @@
-export async function fetchProducts() {
+import { TInventoryItem } from '../models.ts';
+
+export async function fetchProducts(): Promise<TInventoryItem[]> {
   // 4 is just for convenience
   const limit = 4;
   const response = await fetch(`https://dummyjson.com/products?limit=${limit}`);

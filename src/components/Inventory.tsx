@@ -1,22 +1,29 @@
-import { useQuery } from '@tanstack/react-query';
 import { fetchProducts } from '../utils/fetchProducts.ts';
 
 import styles from './Inventory.module.scss';
 import InventoryItem from './InventoryItem.tsx';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Modal from './ui/Modal.tsx';
 import AddInventoryItem from './AddInventoryItem.tsx';
-import { changeInventoryItemLocation } from '../utils/changeInventoryItemLocation.ts';
-// import { AppContext } from '../store.ts';
+import { AppContext } from '../store.ts';
 
 const Inventory = () => {
   let content;
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: ['products'],
-    queryFn: () => fetchProducts(),
-    refetchOnWindowFocus: false
-  });
-  // const appCtx = useContext(AppContext);
+  const [pending, setPending] = useState(true);
+  const appCtx = useContext(AppContext);
+  useEffect(() => {
+    const doRequest = async () => {
+      const inventory = await fetchProducts();
+
+      const newState = { ...appCtx.lists };
+      newState.inventoryItems = inventory;
+      appCtx.updateLists(newState);
+      setPending(false);
+    };
+
+    doRequest();
+  }, []);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -28,32 +35,36 @@ const Inventory = () => {
     setModalOpen(prevState => !prevState);
   }
 
-  const resetSelected = () => setSelected(null);
-
   const addToBasket = () => {
-    changeInventoryItemLocation(
-      'products',
-      'basket',
-      selected,
-      data,
-      resetSelected
-    );
+    let updatedList = [];
+    const basketItems = appCtx.lists.basketItems;
+    const existedIndex = appCtx.lists.basketItems.findIndex(i => i.id === selected);
+
+    if (existedIndex !== -1) {
+      basketItems[existedIndex].count ++;
+      updatedList = [...basketItems];
+    } else {
+
+      updatedList = [{
+        ...appCtx.lists.inventoryItems.find(i => i.id === selected),
+        count: 1
+      }, ...basketItems];
+    }
+
+    appCtx.updateLists({
+      ...appCtx.lists,
+      basketItems: updatedList
+    });
   }
 
-  if (isError) {
-    content = (
-      <div className={styles['notification']}>{error.message}</div>
-    );
-  }
-
-  if (isPending) {
+  if (pending) {
     content = (
       <div className={styles['notification']}>Please, wait...</div>
     );
   }
 
-  if (data) {
-    content = data.map((p: { id: string, title: string }) => {
+  if (appCtx.lists.inventoryItems.length) {
+    content = appCtx.lists.inventoryItems.map((p) => {
       return (
         <InventoryItem
           key={p.id}
@@ -78,7 +89,7 @@ const Inventory = () => {
           <button onClick={() => addToBasket()} className='btn'>Add</button>
         </div>
       </div>
-      {content}
+      { content }
     </div>
   );
 }

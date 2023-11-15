@@ -4,6 +4,8 @@
   border-bottom: 2px solid $border-color;
   padding: 8px;
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
 
   &:hover {
     background: $hover-inventory-item-color;

@@ -1,57 +1,23 @@
 import styles from './Basket.module.scss';
-import { useQuery } from '@tanstack/react-query';
+import { TInventoryItem } from '../models.ts';
 import InventoryItem from './InventoryItem.tsx';
-import { useState } from 'react';
-import { changeInventoryItemLocation } from '../utils/changeInventoryItemLocation.ts';
+import { useContext, useState } from 'react';
+import { AppContext } from '../store.ts';
 
 const Basket = () => {
-  let content;
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: ['basket'],
-    queryFn: () => {
-      return Promise.resolve([]);
-    },
-    refetchOnWindowFocus: false
-  });
+  const appCtx = useContext(AppContext);
   const [selected, setSelected] = useState<string | null>(null);
   const clicked = (id: string) => setSelected(id);
   const resetSelected = () => setSelected(null);
 
   const removed = () => {
-    changeInventoryItemLocation(
-      'basket',
-      'products',
-      selected,
-      data,
-      resetSelected
-    );
-  };
-
-  if (isError) {
-    content = (
-      <div className={styles['notification']}>{error.message}</div>
-    );
-  }
-
-  if (isPending) {
-    content = (
-      <div className={styles['notification']}>Please, wait...</div>
-    );
-  }
-
-  if (data) {
-    content = data.map((p: { id: string, title: string }) => {
-      return (
-        <InventoryItem
-          key={p.id}
-          id={p.id}
-          title={p.title}
-          clicked={clicked}
-          selected={p.id === selected}
-        />
-      );
+    appCtx.updateLists({
+      ...appCtx.lists,
+      basketItems: appCtx.lists.basketItems.filter(i => i.id !== selected)
     });
-  }
+
+    resetSelected();
+  };
 
   return (
     <div className={styles['basket']}>
@@ -61,7 +27,18 @@ const Basket = () => {
           <button onClick={removed} className='btn'>Remove</button>
         </div>
       </div>
-      {content}
+      {appCtx.lists.basketItems.length > 0 && appCtx.lists.basketItems.map((p: TInventoryItem) => {
+        return (
+          <InventoryItem
+            key={p.id}
+            count={p.count}
+            id={p.id}
+            title={p.title}
+            clicked={clicked}
+            selected={p.id === selected}
+          />
+        );
+      })}
     </div>
   )
 }

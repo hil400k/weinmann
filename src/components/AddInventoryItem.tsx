@@ -1,12 +1,13 @@
-import React, { SyntheticEvent, useRef } from 'react';
+import React, { SyntheticEvent, useContext, useRef } from 'react';
 
 import styles from './AddInventoryItem.module.scss';
-import { queryClient } from '../store.ts';
+import { AppContext } from '../store.ts';
 
 type Props = {
   confirmed: () => void;
 };
 const AddInventoryItem: React.FC<Props> = (props: Props) => {
+  const appCtx = useContext(AppContext);
   const ref = useRef<HTMLInputElement>(null);
 
   const submitted = (e: SyntheticEvent) => {
@@ -15,15 +16,18 @@ const AddInventoryItem: React.FC<Props> = (props: Props) => {
     const val = ref?.current?.value;
 
     if (val) {
-      queryClient.setQueriesData({
-        queryKey: ['products']
-      }, (prev) => {
+      const updatedList = [
+        { id: new Date().getTime().toString(),
+          title: val
+        },
+        ...appCtx.lists.inventoryItems
+      ];
 
-        return [
-          { id: new Date().getTime().toString(),
-            title: val
-          }, ...(prev as any[])]
+      appCtx.updateLists({
+        ...appCtx.lists,
+        inventoryItems: updatedList
       });
+
       props.confirmed();
     }
   }

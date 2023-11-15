@@ -2,25 +2,11 @@ import React, { SyntheticEvent, useContext, useRef } from 'react';
 
 import styles from './AddInventoryItem.module.scss';
 import { AppContext } from '../store.ts';
-import { TAppContext } from '../models.ts';
+import { addNewInventory } from '../utils/addNewInventory.ts';
 
 type Props = {
   confirmed: () => void;
 };
-
-function addNewInventory(ctx: TAppContext, val: string) {
-  const updatedList = [
-    { id: new Date().getTime().toString(),
-      title: val
-    },
-    ...ctx.lists.inventoryItems
-  ];
-
-  ctx.updateLists({
-    ...ctx.lists,
-    inventoryItems: updatedList
-  });
-}
 
 const AddInventoryItem: React.FC<Props> = (props: Props) => {
   const appCtx = useContext(AppContext);

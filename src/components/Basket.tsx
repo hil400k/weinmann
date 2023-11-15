@@ -3,6 +3,7 @@ import { TInventoryItem } from '../models.ts';
 import InventoryItem from './InventoryItem.tsx';
 import { useContext, useState } from 'react';
 import { AppContext } from '../store.ts';
+import { removeFromInventory } from '../utils/removeFromInventory.ts';
 
 const Basket = () => {
   const appCtx = useContext(AppContext);
@@ -15,17 +16,7 @@ const Basket = () => {
   }
 
   const removed = () => {
-    let updatedList = [...appCtx.lists.basketItems];
-
-    selected.forEach(s => {
-      updatedList = [...updatedList.filter(i => i.id !== s)];
-    });
-
-    appCtx.updateLists({
-      ...appCtx.lists,
-      basketItems: updatedList
-    });
-
+    removeFromInventory(appCtx, selected);
     setSelected([]);
   };
 

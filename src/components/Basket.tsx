@@ -6,17 +6,26 @@ import { AppContext } from '../store.ts';
 
 const Basket = () => {
   const appCtx = useContext(AppContext);
-  const [selected, setSelected] = useState<string | null>(null);
-  const clicked = (id: string) => setSelected(id);
-  const resetSelected = () => setSelected(null);
+  const [selected, setSelected] = useState<string[]>([]);
+  const clicked = (id: string) => {
+    const index = selected.findIndex(i => i === id);
+
+    setSelected((index === -1) ? [id, ...selected] : selected.filter(i => i !== id));
+  }
 
   const removed = () => {
-    appCtx.updateLists({
-      ...appCtx.lists,
-      basketItems: appCtx.lists.basketItems.filter(i => i.id !== selected)
+    let updatedList = [...appCtx.lists.basketItems];
+
+    selected.forEach(s => {
+      updatedList = [...updatedList.filter(i => i.id !== s)];
     });
 
-    resetSelected();
+    appCtx.updateLists({
+      ...appCtx.lists,
+      basketItems: updatedList
+    });
+
+    setSelected([]);
   };
 
   return (
@@ -35,7 +44,7 @@ const Basket = () => {
             id={p.id}
             title={p.title}
             clicked={clicked}
-            selected={p.id === selected}
+            selected={selected.includes(p.id)}
           />
         );
       })}

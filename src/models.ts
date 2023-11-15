@@ -4,10 +4,12 @@ export type TInventoryItem = {
   count?: number;
 };
 
+export type TLists = {
+  inventoryItems: TInventoryItem[];
+  basketItems: TInventoryItem[];
+};
+
 export type TAppContext = {
-  lists: {
-    inventoryItems: TInventoryItem[];
-    basketItems: TInventoryItem[];
-  }
+  lists: TLists;
   updateLists: (lists: any) => void;
 };

@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import Modal from './ui/Modal.tsx';
 import AddInventoryItem from './AddInventoryItem.tsx';
 import { AppContext } from '../store.ts';
+import { TInventoryItem } from '../models.ts';
 
 const Inventory = () => {
   let content;
@@ -41,7 +42,7 @@ const Inventory = () => {
     const existedIndex = appCtx.lists.basketItems.findIndex(i => i.id === selected);
 
     if (existedIndex !== -1) {
-      basketItems[existedIndex].count ++;
+      (basketItems[existedIndex] as Required<TInventoryItem>).count ++;
       updatedList = [...basketItems];
     } else {
 

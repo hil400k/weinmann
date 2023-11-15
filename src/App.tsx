@@ -4,17 +4,17 @@ import Inventory from './components/Inventory.tsx';
 import { defaultState, AppContext } from './store.ts';
 import { useState } from 'react';
 import Basket from './components/Basket.tsx';
-import { TInventoryItem } from './models.ts';
+import { TInventoryItem, TLists } from './models.ts';
 
 function App() {
   const [state, setState] = useState(defaultState);
 
-  const updateLists = (updated: any) => {
+  const updateLists = (updated: TLists): void => {
     setState(updated);
   };
 
-  const getTotal = () => {
-    return state.basketItems.reduce((sum, currItem: Required<TInventoryItem>) => {
+  const getTotal = (): number => {
+    return (state.basketItems as Required<TInventoryItem>[]).reduce((sum, currItem) => {
       return sum + currItem.count;
     }, 0);
   }

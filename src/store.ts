@@ -1,7 +1,7 @@
 import { createContext } from 'react';
-import { TAppContext } from './models.ts';
+import { TAppContext, TLists } from './models.ts';
 
-export const defaultState = {
+export const defaultState: TLists = {
   inventoryItems: [],
   basketItems: [],
 };

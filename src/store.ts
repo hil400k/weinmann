@@ -1,5 +1,4 @@
 import { createContext } from 'react';
-import { QueryClient } from '@tanstack/react-query';
 import { TAppContext } from './models.ts';
 
 export const defaultState = {
@@ -12,5 +11,3 @@ export const AppContext = createContext<TAppContext>({
   },
   updateLists: () => {}
 });
-
-export const queryClient = new QueryClient();

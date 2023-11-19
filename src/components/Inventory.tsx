@@ -6,7 +6,6 @@ import { useContext, useEffect, useState } from 'react';
 import Modal from './ui/Modal.tsx';
 import AddInventoryItem from './AddInventoryItem.tsx';
 import { AppContext } from '../store.ts';
-import { addToBasket } from '../utils/addToBasket.ts';
 
 const Inventory = () => {
   const [pending, setPending] = useState(true);
@@ -16,9 +15,7 @@ const Inventory = () => {
     const doRequest = async () => {
       const inventory = await fetchProducts();
 
-      const newState = { ...appCtx.lists };
-      newState.inventoryItems = inventory;
-      appCtx.updateLists(newState);
+      appCtx.initInventory({ inventory });
       setPending(false);
     };
 
@@ -39,6 +36,10 @@ const Inventory = () => {
     setModalOpen(prevState => !prevState);
   }
 
+  const addToBasket = () => {
+    appCtx.addToBasket({ selected } );
+  }
+
   return (
     <div className={styles['inventory']}>
       <div className="control-pane">
@@ -48,7 +49,7 @@ const Inventory = () => {
         </Modal>}
         <div className={styles['buttons']}>
           <button onClick={() => setModalOpen(true)} className='btn'>New</button>
-          <button onClick={() => addToBasket(appCtx, selected)} className='btn'>Add to Basket</button>
+          <button onClick={addToBasket} className='btn'>Add to Basket</button>
         </div>
       </div>
       { pending && <div className={styles['notification']}>Please, wait...</div> }

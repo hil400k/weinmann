@@ -2,7 +2,6 @@ import React, { SyntheticEvent, useContext, useRef } from 'react';
 
 import styles from './AddInventoryItem.module.scss';
 import { AppContext } from '../store.ts';
-import { addNewInventory } from '../utils/addNewInventory.ts';
 
 type Props = {
   confirmed: () => void;
@@ -18,7 +17,8 @@ const AddInventoryItem: React.FC<Props> = (props: Props) => {
     const val = ref?.current?.value;
 
     if (val) {
-      addNewInventory(appCtx, val);
+
+      appCtx.createNew({ val });
 
       props.confirmed();
     }

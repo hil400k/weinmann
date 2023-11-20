@@ -1,5 +1,7 @@
 import { TAction, TInventoryItem, TLists } from './models.ts';
 
+// todo: turn on strict mode
+// todo: add types for actions
 export function reducer(state: TLists, action: TAction): TLists {
   let updatedState;
 

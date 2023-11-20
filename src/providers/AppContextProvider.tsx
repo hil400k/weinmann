@@ -1,7 +1,7 @@
 import React, { ReactNode, useReducer } from 'react';
 import { defaultLists, AppContext } from '../store.ts';
 import { reducer } from '../reducer.ts';
-import { TAction } from '../models.ts';
+import { fetchProducts } from '../utils/fetchProducts.ts';
 
 type Props = {
   children: ReactNode;
@@ -10,10 +10,6 @@ type Props = {
 const AppContextProvider: React.FC<Props> = (props: Props) => {
   const [state, dispatch] = useReducer(reducer, defaultLists);
 
-  const updateLists = (action: TAction): void => {
-    dispatch(action);
-  };
-
   const removeFromBasket = (payload: any) => {
     dispatch({
       type: 'remove-from-basket',
@@ -21,10 +17,14 @@ const AppContextProvider: React.FC<Props> = (props: Props) => {
     });
   };
 
-  const initInventory = (payload: any) => {
+  const initInventory = async () => {
+    const inventory = await fetchProducts();
+
     dispatch({
       type: 'init',
-      payload
+      payload: {
+        inventory
+      }
     });
   }
 
@@ -44,7 +44,6 @@ const AppContextProvider: React.FC<Props> = (props: Props) => {
 
   return (
     <AppContext.Provider value={{
-      updateLists: updateLists,
       removeFromBasket: removeFromBasket,
       initInventory: initInventory,
       createNew: createNew,

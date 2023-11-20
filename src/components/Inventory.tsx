@@ -1,5 +1,3 @@
-import { fetchProducts } from '../utils/fetchProducts.ts';
-
 import styles from './Inventory.module.scss';
 import InventoryItem from './InventoryItem.tsx';
 import { useContext, useEffect, useState } from 'react';
@@ -8,18 +6,10 @@ import AddInventoryItem from './AddInventoryItem.tsx';
 import { AppContext } from '../store.ts';
 
 const Inventory = () => {
-  const [pending, setPending] = useState(true);
   const appCtx = useContext(AppContext);
 
   useEffect(() => {
-    const doRequest = async () => {
-      const inventory = await fetchProducts();
-
-      appCtx.initInventory({ inventory });
-      setPending(false);
-    };
-
-    doRequest();
+    appCtx.initInventory();
   }, []);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -52,7 +42,7 @@ const Inventory = () => {
           <button onClick={addToBasket} className='btn'>Add to Basket</button>
         </div>
       </div>
-      { pending && <div className={styles['notification']}>Please, wait...</div> }
+      { appCtx.lists.pending && <div className={styles['notification']}>Please, wait...</div> }
       { appCtx.lists.inventoryItems.map((p) => {
         return (
           <InventoryItem

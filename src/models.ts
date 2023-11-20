@@ -7,13 +7,13 @@ export type TInventoryItem = {
 export type TLists = {
   inventoryItems: TInventoryItem[];
   basketItems: TInventoryItem[];
+  pending: boolean;
 };
 
 export type TAppContext = {
   lists: TLists;
-  updateLists: (lists: any) => void;
   removeFromBasket: (payload: any) => void;
-  initInventory: (payload: any) => void;
+  initInventory: () => void;
   createNew: (payload: any) => void;
   addToBasket: (payload: any) => void;
 };

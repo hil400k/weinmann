@@ -7,7 +7,7 @@ export function reducer(state: TLists, action: TAction): TLists {
 
   switch (action.type) {
     case 'init': {
-      updatedState = { ...state };
+      updatedState = { ...state, pending: false };
       updatedState.inventoryItems = action.payload.inventory;
 
       break;

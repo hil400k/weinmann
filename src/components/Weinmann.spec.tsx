@@ -11,9 +11,13 @@ function renderComponentWithContext() {
           { id: 'id', title: 'title', count: 1 },
           { id: 'id2', title: 'title', count: 1 }
         ],
-        inventoryItems: []
+        inventoryItems: [],
+        pending: true
       },
-      updateLists: () => {}
+      removeFromBasket: () => {},
+      addToBasket: () => {},
+      initInventory: () => {},
+      createNew: () => {},
     }}>
       <Weinmann />
     </AppContext.Provider>

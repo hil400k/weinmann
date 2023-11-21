@@ -1,15 +1,19 @@
 import styles from './Inventory.module.scss';
 import InventoryItem from './InventoryItem.tsx';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import Modal from './ui/Modal.tsx';
 import AddInventoryItem from './AddInventoryItem.tsx';
 import { AppContext } from '../store.ts';
 
 const Inventory = () => {
   const appCtx = useContext(AppContext);
+  const dataInitedRef = useRef(false);
 
   useEffect(() => {
-    appCtx.initInventory();
+    if (!dataInitedRef.current) {
+      appCtx.initInventory();
+      dataInitedRef.current = true;
+    }
   }, []);
 
   const [modalOpen, setModalOpen] = useState(false);

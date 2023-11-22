@@ -1,9 +1,10 @@
 import styles from './Inventory.module.scss';
 import InventoryItem from './InventoryItem.tsx';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState, lazy, Suspense } from 'react';
 import Modal from './ui/Modal.tsx';
-import AddInventoryItem from './AddInventoryItem.tsx';
 import { AppContext } from '../store.ts';
+
+const AddInventoryItem = lazy(() => import('./AddInventoryItem.tsx'));
 
 const Inventory = () => {
   const appCtx = useContext(AppContext);
@@ -39,7 +40,9 @@ const Inventory = () => {
       <div className="control-pane">
         <h4>Inventory</h4>
         {modalOpen && <Modal title="Add Inventory Item" confirmed={changeModalState}>
-          <AddInventoryItem confirmed={changeModalState} />
+          <Suspense fallback={(() => (<span>Loading...</span>))()}>
+            <AddInventoryItem confirmed={changeModalState} />
+          </Suspense>
         </Modal>}
         <div className={styles['buttons']}>
           <button onClick={() => setModalOpen(true)} className='btn'>New</button>
